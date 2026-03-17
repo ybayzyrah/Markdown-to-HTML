@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Markdown to HTML Converter</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+
+  textarea {
+    width: 100%;
+    height: 150px;
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  #html-output {
+    background: #f4f4f4;
+    padding: 10px;
+    white-space: pre-wrap;
+  }
+
+  #preview {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 100px;
+    margin-top: 10px;
+  }
+
+  blockquote {
+    border-left: 4px solid gray;
+    padding-left: 10px;
+    margin-left: 0;
+  }
+
+  img {
+    max-width: 100%;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Markdown to HTML Converter</h1>
+
+<textarea id="markdown-input" placeholder="Enter Markdown here..."></textarea>
+
+<h2>HTML Output</h2>
+<pre id="html-output"></pre>
+
+<h2>Preview</h2>
+<div id="preview"></div>
+
+<script>
+function convertMarkdown() {
+  const input = document.getElementById("markdown-input").value;
+  let output = input;
+
+  // Headings
+  output = output.replace(/^\s*###\s+(.*)$/gm, "<h3>$1</h3>");
+  output = output.replace(/^\s*##\s+(.*)$/gm, "<h2>$1</h2>");
+  output = output.replace(/^\s*#\s+(.*)$/gm, "<h1>$1</h1>");
+
+  // Blockquotes
+  output = output.replace(/^\s*>\s+(.*)$/gm, "<blockquote>$1</blockquote>");
+
+  // Images (before links)
+  output = output.replace(
+    /!\[(.*?)\]\((.*?)\)/g,
+    '<img alt="$1" src="$2">'
+  );
+
+  // Links
+  output = output.replace(
+    /\[(.*?)\]\((.*?)\)/g,
+    '<a href="$2">$1</a>'
+  );
+
+  // Bold
+  output = output.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+  output = output.replace(/__(.*?)__/g, "<strong>$1</strong>");
+
+  // Italic
+  output = output.replace(/\*(.*?)\*/g, "<em>$1</em>");
+  output = output.replace(/_(.*?)_/g, "<em>$1</em>");
+
+  return output;
+}
+
+// Input event listener
+document.getElementById("markdown-input").addEventListener("input", function () {
+  const html = convertMarkdown();
+
+  // Show raw HTML
+  document.getElementById("html-output").textContent = html;
+
+  // Render preview
+  document.getElementById("preview").innerHTML = html;
+});
+</script>
+
+</body>
+</html>
